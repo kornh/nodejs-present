@@ -1,0 +1,59 @@
+<mvc:View
+	controllerName="com.github.kornh.nodejs-presenter-ui.controller.App"
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:l="sap.ui.layout"
+	xmlns:core="sap.ui.core"
+    xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	displayBlock="true">
+    <App>
+        <pages>
+            <Page title="{i18n>appTitle}">
+                <content>
+                    <l:ResponsiveSplitter defaultPane="default">
+                        <l:PaneContainer resize=".onRootContainerResize">
+                            <l:SplitPane id="default">
+                                <l:layoutData>
+                                    <l:SplitterLayoutData size="50%" />
+                                </l:layoutData>
+                                <Panel headerText="Available Files" height="100%">
+                                    <SearchField width="100%" class="" value="{viewModel>/searchText}" search="onSearchChange"/>
+                                    <List mode="None" items="{path: 'viewModel>/files'}">
+                                        <CustomListItem>
+                                            <FlexBox alignItems="Start" justifyContent="SpaceBetween">
+                                                <l:VerticalLayout class="sapUiContentPadding">
+                                                    <Text text="{viewModel>filename}"/>
+                                                </l:VerticalLayout>
+                                                <HBox>
+                                                    <Button icon="sap-icon://projector" type="Transparent" press="onPressItem" ariaLabelledBy="editButtonLabel" app:hash="{viewModel>hash}" />
+                                                    <Button icon="sap-icon://navigation-{= ${viewModel>found} ? 'left' : 'right' }-arrow" type="Transparent" press="onSelectItem" app:hash="{viewModel>hash}" app:filename="{viewModel>filename}" />
+                                                </HBox>
+                                            </FlexBox>
+                                        </CustomListItem>
+                                    </List>
+                                </Panel>
+                            </l:SplitPane>
+                            <l:SplitPane>
+                                <Panel headerText="Selected Files" height="100%">
+                                    <List mode="None" items="{path: 'viewModel>/favorites'}">
+                                        <CustomListItem>
+                                            <FlexBox alignItems="Start" justifyContent="SpaceBetween">
+                                                <HBox>
+                                                    <Button icon="sap-icon://navigation-left-arrow" type="Transparent" press="onSelectItem" app:hash="{viewModel>hash}" app:filename="{viewModel>filename}" />
+                                                    <l:VerticalLayout class="sapUiContentPadding">
+                                                        <Text text="{viewModel>filename}"/>
+                                                    </l:VerticalLayout>
+                                                </HBox>
+                                                <Button icon="sap-icon://projector" type="Transparent" press="onPressItem" ariaLabelledBy="editButtonLabel" app:hash="{viewModel>hash}" />
+                                            </FlexBox>
+                                        </CustomListItem>
+                                    </List>
+                                </Panel>
+                            </l:SplitPane>
+                        </l:PaneContainer>
+                    </l:ResponsiveSplitter>
+                </content>
+            </Page>
+        </pages>
+    </App>
+</mvc:View>
