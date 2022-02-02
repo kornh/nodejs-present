@@ -1,14 +1,47 @@
 require('dotenv').config();
 
+const processWindows = require("node-process-windows");
+const screenshot = require('screenshot-desktop');
+
 var files = require('../utils/files');
 
-const screenshot = require('screenshot-desktop');
 const {
-    exec
+    spawn
 } = require("child_process");
 var robot = require("robotjs");
 
-const command = 'start ' + process.env.EXEC_START + ' ';
+const command = process.env.EXEC_START,
+    args = [process.env.EXEC_ARG0, ''];
+
+var activeProcess = null,
+    activeProcessWindow = null;
+
+var callProcess = function (command, args) {
+    if (!!activeProcess) {
+        return;
+    }
+    activeProcess = spawn(command, args);
+    activeProcess.on('close', (code) => {
+        console.log('activeProcess closed');
+        activeProcess = null;
+        activeProcessWindow = null;
+    });
+
+    processWindows.getProcesses(function (err, processes) {
+        var activePID = activeProcess.pid;
+        var pptProcesses = processes.filter(p => p.pid === activePID);
+        if (pptProcesses.length > 0) {
+            activeProcessWindow = pptProcesses[0];
+        }
+    }.bind(this));
+}
+
+var focusWindowWithKey = function (key) {
+    processWindows.focusWindow(activeProcessWindow);
+    setTimeout(function () {
+        robot.keyTap(key);
+    }, 100);
+}
 
 var logic = function (socket) {
     console.log('a user connected');
@@ -17,9 +50,9 @@ var logic = function (socket) {
         var path = files.getPathByHash(fileHash);
         path = files.toWinPath(path);
         console.log("start: " + path);
-        var cli = command + "\"" + path + "\"";
-        console.log("start: " + cli);
-        exec(cli);
+        args[1] = path;
+        console.log("start: " + command);
+        callProcess(command, args);
     });
     socket.on('#screen', (msg) => {
         screenshot.all({
@@ -31,13 +64,13 @@ var logic = function (socket) {
         })
     });
     socket.on('#left', (msg) => {
-        robot.keyTap("left");
+        focusWindowWithKey("left");
     });
     socket.on('#right', (msg) => {
-        robot.keyTap("right");
+        focusWindowWithKey("right");
     });
     socket.on('#stop', (msg) => {
-        robot.keyTap("escape");
+        focusWindowWithKey("escape");
     });
     socket.on('#file-list', (msg) => {
         var ret = files.getHashedList();
