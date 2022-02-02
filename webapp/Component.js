@@ -23,7 +23,8 @@ sap.ui.define([
 				searchText: '',
 				image: null,
 				imageNum: 0,
-				imageMax: 1
+				imageMax: 1,
+				projectorEnabled: false
 			});
 
 			// Assign the model object to the SAPUI5 core

@@ -33,6 +33,10 @@ sap.ui.define([
 				const url = URL.createObjectURL(blob);
 				this.getView().getModel("viewModel").setProperty("/image", url);
 			}.bind(this));
+
+			this.socket.on('status', function (status) {
+				this.getView().getModel("viewModel").setProperty("/projectorEnabled", status.active);
+			}.bind(this));
 		},
 		onSelectItem: function (oEvent) {
 			var item = {
@@ -111,8 +115,15 @@ sap.ui.define([
 				newFilesList = files;
 			}
 			this.getView().getModel("viewModel").setProperty("/files", newFilesList);
+		},
+		onOpenPresenter: function () {
+			this._oDialog.open();
+			this.fetchDelayedScreen();
+		},
+		onMinimizePress: function () {
+			this._oDialog.close();
 		}
-
+		
 	});
 
 });

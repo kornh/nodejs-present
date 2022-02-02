@@ -9,6 +9,7 @@
                     <Title text="Slideshow"/>
                 </contentMiddle>
                 <contentRight>
+                    <Button icon="sap-icon://less" type="Transparent" press="onMinimizePress" />
                     <Button icon="sap-icon://decline" type="Transparent" press="onStopPress" />
                 </contentRight>
             </Bar>

@@ -16,16 +16,24 @@ const command = process.env.EXEC_START,
 var activeProcess = null,
     activeProcessWindow = null;
 
+var statusFunction = function () {
+    var status = {
+        active: !!activeProcess
+    }
+    socket.emit('status', status);
+}
+
 var callProcess = function (command, args) {
     if (!!activeProcess) {
         return;
     }
     activeProcess = spawn(command, args);
-    activeProcess.on('close', (code) => {
+    activeProcess.on('close', function(code) {
         console.log('activeProcess closed');
         activeProcess = null;
         activeProcessWindow = null;
-    });
+        statusFunction();
+    }.bind(this));
 
     processWindows.getProcesses(function (err, processes) {
         var activePID = activeProcess.pid;
@@ -79,6 +87,8 @@ var logic = function (socket) {
     socket.on('disconnect', () => {
         console.log('user disconnected');
     });
+
+    setInterval(statusFunction, 100);
 }
 
 module.exports = logic;
