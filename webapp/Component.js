@@ -21,7 +21,9 @@ sap.ui.define([
 				fullList: [],
 				favorites: [],
 				searchText: '',
-				image: null
+				image: null,
+				imageNum: 0,
+				imageMax: 1
 			});
 
 			// Assign the model object to the SAPUI5 core

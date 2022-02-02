@@ -27,7 +27,9 @@ sap.ui.define([
 			}.bind(this));
 
 			this.socket.on('image', function (img) {
-				const blob = new Blob([img[0]]);
+				this.getView().getModel("viewModel").setProperty("/imageMax", img.length);
+				var imageNum = this.getView().getModel("viewModel").getProperty("/imageNum");
+				const blob = new Blob([img[imageNum]]);
 				const url = URL.createObjectURL(blob);
 				this.getView().getModel("viewModel").setProperty("/image", url);
 			}.bind(this));
@@ -70,7 +72,10 @@ sap.ui.define([
 			this.socket.emit("#start", hash);
 			this.fetchDelayedScreen();
 		},
-		onImagePress: function (oEvent) {
+		onImagePress: function (oEvent, imageNum) {
+			if (imageNum >= 0) {
+				this.getView().getModel("viewModel").setProperty("/imageNum", imageNum);
+			}
 			this.socket.emit("#screen");
 		},
 		onLeftPress: function (oEvent) {

@@ -17,7 +17,8 @@
             <Toolbar>
                 <Button icon="sap-icon://navigation-left-arrow" type="Transparent" press="onLeftPress" />
                 <ToolbarSpacer/>
-                <Button text="Refresh" press="onImagePress"/>
+                <Button text="Screen 1" press=".onImagePress($event, 0)"/>
+                <Button visivle="{= ${viewModel>/imageMax} > 1 }" text="Screen 2" press=".onImagePress($event, 1)"/>
                 <ToolbarSpacer/>
                 <Button icon="sap-icon://navigation-right-arrow" type="Transparent" press="onRightPress" />
             </Toolbar>
