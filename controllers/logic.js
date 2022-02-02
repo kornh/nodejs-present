@@ -16,13 +16,6 @@ const command = process.env.EXEC_START,
 var activeProcess = null,
     activeProcessWindow = null;
 
-var statusFunction = function () {
-    var status = {
-        active: !!activeProcess
-    }
-    socket.emit('status', status);
-}
-
 var callProcess = function (command, args) {
     if (!!activeProcess) {
         return;
@@ -32,7 +25,6 @@ var callProcess = function (command, args) {
         console.log('activeProcess closed');
         activeProcess = null;
         activeProcessWindow = null;
-        statusFunction();
     }.bind(this));
 
     processWindows.getProcesses(function (err, processes) {
@@ -52,6 +44,13 @@ var focusWindowWithKey = function (key) {
 }
 
 var logic = function (socket) {
+    var statusFunction = function () {
+        var status = {
+            active: !!activeProcess
+        }
+        socket.emit('status', status);
+    }
+    
     console.log('a user connected');
     socket.on('#start', (fileHash) => {
         console.log("start: " + fileHash);
@@ -61,6 +60,7 @@ var logic = function (socket) {
         args[1] = path;
         console.log("start: " + command);
         callProcess(command, args);
+        statusFunction();
     });
     socket.on('#screen', (msg) => {
         screenshot.all({
@@ -79,6 +79,7 @@ var logic = function (socket) {
     });
     socket.on('#stop', (msg) => {
         focusWindowWithKey("escape");
+        statusFunction();
     });
     socket.on('#file-list', (msg) => {
         var ret = files.getHashedList();
