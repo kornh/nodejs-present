@@ -1,0 +1,4 @@
+specVersion: "2.6"
+type: application
+metadata: 
+  name: com.github.kornh.nodejs-presenter-ui
