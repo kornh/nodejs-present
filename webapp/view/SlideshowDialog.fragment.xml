@@ -10,18 +10,18 @@
                 </contentMiddle>
                 <contentRight>
                     <Button icon="sap-icon://less" type="Transparent" press="onMinimizePress" />
-                    <Button icon="sap-icon://decline" type="Transparent" press="onStopPress" />
+                    <Button icon="sap-icon://decline" type="Transparent" press="onStopPress" enabled="{viewModel>/projectorEnabled}"/>
                 </contentRight>
             </Bar>
         </customHeader>
         <content>
             <Toolbar>
-                <Button icon="sap-icon://navigation-left-arrow" type="Transparent" press="onLeftPress" />
+                <Button icon="sap-icon://navigation-left-arrow" type="Transparent" press="onLeftPress" enabled="{viewModel>/projectorEnabled}"/>
                 <ToolbarSpacer/>
                 <Button text="Screen 1" press=".onImagePress($event, 0)"/>
                 <Button visivle="{= ${viewModel>/imageMax} > 1 }" text="Screen 2" press=".onImagePress($event, 1)"/>
                 <ToolbarSpacer/>
-                <Button icon="sap-icon://navigation-right-arrow" type="Transparent" press="onRightPress" />
+                <Button icon="sap-icon://navigation-right-arrow" type="Transparent" press="onRightPress" enabled="{viewModel>/projectorEnabled}"/>
             </Toolbar>
             <FlexBox
 				alignItems="Center"

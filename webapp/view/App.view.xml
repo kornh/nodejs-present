@@ -10,7 +10,7 @@
         <pages>
             <Page title="{i18n>appTitle}">
                 <headerContent>
-                    <Button icon="sap-icon://projector" type="Success" enabled="{viewModel>/projectorEnabled}" press="onOpenPresenter"/>
+                    <Button icon="sap-icon://projector" type="{= ${viewModel>/projectorEnabled} ? 'Success' : 'None' }" press="onOpenPresenter"/>
                 </headerContent>
                 <content>
                     <l:ResponsiveSplitter defaultPane="default">
