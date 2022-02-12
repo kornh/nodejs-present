@@ -3,7 +3,11 @@ require('dotenv').config();
 const express = require('express'),
     app = express();
 
-app.use(express.static('webapp'));
+var mode = process.env.MODE;
+if (!mode) {
+    mode = 'webapp';
+}
+app.use(express.static(mode));
 
 const http = require('http'),
     server = http.createServer(app);
