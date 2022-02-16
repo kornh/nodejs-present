@@ -17,26 +17,32 @@ var activeProcess = null,
     activeProcessWindow = null;
 
 var callProcess = function (command, args) {
-    if (!!activeProcess) {
+    if (!!activeProcess || !command) {
         return;
     }
     activeProcess = spawn(command, args);
-    activeProcess.on('close', function(code) {
+    activeProcess.on('exit', function (code) {
         console.log('activeProcess closed');
         activeProcess = null;
         activeProcessWindow = null;
     }.bind(this));
 
-    processWindows.getProcesses(function (err, processes) {
+    processWindows && processWindows.getProcesses(function (err, processes) {
+        if (!activeProcess) {
+            return;
+        }
         var activePID = activeProcess.pid;
-        var pptProcesses = processes.filter(p => p.pid === activePID);
-        if (pptProcesses.length > 0) {
+        var pptProcesses = processes && processes.filter(p => p.pid === activePID);
+        if (pptProcesses && pptProcesses.length > 0) {
             activeProcessWindow = pptProcesses[0];
         }
     }.bind(this));
 }
 
 var focusWindowWithKey = function (key) {
+    if (!key) {
+        return;
+    }
     processWindows.focusWindow(activeProcessWindow);
     setTimeout(function () {
         robot.keyTap(key);
@@ -48,9 +54,12 @@ var logic = function (socket) {
         var status = {
             active: !!activeProcess
         }
+        if (status.active) {
+            status;
+        }
         socket.emit('status', status);
     }
-    
+
     console.log('a user connected');
     socket.on('#start', (fileHash) => {
         console.log("start: " + fileHash);
